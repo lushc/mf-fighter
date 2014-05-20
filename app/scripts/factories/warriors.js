@@ -1,22 +1,24 @@
-/**
- * Helper class for various utilities
- * @type {Object}
- */
-var Utils = {
-    getRandomArbitrary: function(min, max) {
-        return Math.random() * (max - min) + min;
-    },
-    getRandomInt: function(min, max) {
-      return Math.floor(Math.random() * (max - min + 1)) + min;
-    }
-}
+'use strict';
 
-/**
- * Base warrior class. Has the following attributes:
- * name, health, attack, defense, speed, evade chance
- * @return {Object} An instance of Warrior
- */
-var Warrior = (function () {
+angular.module('mffighterApp.warriors', [])
+  /**
+   * Base warrior class. Has the following attributes:
+   * name, health, attack, defense, speed, evade chance
+   * @return {Object} An instance of Warrior
+   */
+  .factory('Warrior', function ($rootScope) {
+    /**
+     * Helper class for various utilities
+     * @type {Object}
+     */
+    var Utils = {
+        getRandomArbitrary: function(min, max) {
+            return Math.random() * (max - min) + min;
+        },
+        getRandomInt: function(min, max) {
+          return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+    }
 
     /**
      * Constructor that assigns the warrior's attributes.
@@ -25,7 +27,7 @@ var Warrior = (function () {
      * within this range for the given attribute.
      * @param {Object} props Attributes for the warrior
      */
-    function Warrior(props) {
+    var Warrior = function(props) {
         // assign default values
         var name     = props.name         || "Warrior",
         healthRange  = props.healthRange  || [0,100],
@@ -43,7 +45,7 @@ var Warrior = (function () {
         this.evadeChance = Utils.getRandomArbitrary(evadeRange[0], evadeRange[1]);
         // keep track of the warrior's current health
         this.health      = this.maxHealth;
-    }
+    };
 
     Warrior.prototype.constructor = Warrior;
 
@@ -72,7 +74,7 @@ var Warrior = (function () {
     Warrior.prototype.getAttackedBy = function (attacker) {
         // check if the attack will be evaded
         if (this.doEvade()) {
-            console.log(this.name + " avoided " + attacker.name + "'s attack!");
+            this.broadcastMessage(this.name + " avoided " + attacker.name + "'s attack!");
             return false;
         }
 
@@ -81,16 +83,27 @@ var Warrior = (function () {
 
         // make sure negative damage won't be applied
         if (damage <= 0) {
-            console.log(attacker.name + "'s attack connected but didn't even scratch " + this.name + "!");
+            this.broadcastMessage(attacker.name + "'s attack connected but didn't even scratch " + this.name + "!");
             return false;
         }
 
         // apply the damage
         this.health -= damage;
-        console.log(attacker.name + " hit " + this.name + " for " + damage + " damage");
+        this.broadcastMessage(attacker.name + " hit " + this.name + " for " + damage + " damage");
 
         // successful hit
         return true;
+    }
+
+    /**
+     * Broadcasts a message to the root scope
+     * @param  {String} message Message detailing the event that happened
+     * @return {undefined}
+     */
+    Warrior.prototype.broadcastMessage = function (message) {
+        $rootScope.$broadcast("warriorMessageEvent", {
+            message: message
+        });
     }
 
     /**
@@ -98,23 +111,22 @@ var Warrior = (function () {
      * @override
      */
     Warrior.prototype.toString = function () {
-      return this.name + "'s character sheet: " +
-      " Current Health: " + this.health +
-      ", Max Health: " + this.maxHealth +
-      ", Attack: " + this.attack +
-      ", Defence: " + this.defence +
-      ", Speed: " + this.speed +
-      ", Evade Chance: " + this.evadeChance.toFixed(2);
+        return this.name + "'s character sheet: " +
+        " Current Health: " + this.health +
+        ", Max Health: " + this.maxHealth +
+        ", Attack: " + this.attack +
+        ", Defence: " + this.defence +
+        ", Speed: " + this.speed +
+        ", Evade Chance: " + this.evadeChance.toFixed(2);
     }
 
     return Warrior;
-})();
-
-/**
- * Ninja class, extends Warrior with class-specific attributes
- * @return {Object} An instance of Ninja
- */
-var Ninja = (function () {
+  })
+  /**
+   * Ninja class, inherits Warrior with class-specific attributes
+   * @return {Object} An instance of Ninja
+   */
+  .factory('Ninja', function (Warrior) {
 
     var my = {
         name:         "Ninja",
@@ -129,7 +141,7 @@ var Ninja = (function () {
         }
     };
 
-    function Ninja() {
+    var Ninja = function () {
         Warrior.apply(this, [my]);
     }
 
@@ -146,7 +158,7 @@ var Ninja = (function () {
         if (Math.random() < my.special.chance) {
             // calculate special
             this.attack *= my.special.attackModifier;
-            console.log(this.name + " has increased their attack strength!");
+            this.broadcastMessage(this.name + " has increased their attack strength!");
         }
 
         return Warrior.prototype.doAttack.call(this);
@@ -163,13 +175,12 @@ var Ninja = (function () {
     }
 
     return Ninja;
-})();
-
-/**
- * Samurai class, extends Warrior with class-specific attributes
- * @return {Object} An instance of Samauri
- */
-var Samurai = (function () {
+  })
+  /**
+   * Samurai class, inherits Warrior with class-specific attributes
+   * @return {Object} An instance of Samauri
+   */
+  .factory('Samauri', function (Warrior) {
 
     var my = {
         name:         "Samurai",
@@ -184,7 +195,7 @@ var Samurai = (function () {
         }
     };
 
-    function Samurai() {
+    var Samurai = function () {
         Warrior.apply(this, [my]);
     }
 
@@ -204,7 +215,7 @@ var Samurai = (function () {
             // calculate special
             var regainedHealth = (this.health + my.special.regenAmount);
             this.health = (regainedHealth < this.maxHealth ? regainedHealth : this.maxHealth);
-            console.log(this.name + " regained health!");
+            this.broadcastMessage(this.name + " regained health!");
         }
 
         return evaded;
@@ -221,13 +232,12 @@ var Samurai = (function () {
     }
 
     return Samurai;
-})();
-
-/**
- * Brawler class, extends Warrior with class-specific attributes
- * @return {Object} An instance of Brawler
- */
-var Brawler = (function () {
+  })
+  /**
+   * Brawler class, inherits Warrior with class-specific attributes
+   * @return {Object} An instance of Brawler
+   */
+  .factory('Brawler', function (Warrior) {
 
     var my = {
         name:         "Brawler",
@@ -243,7 +253,7 @@ var Brawler = (function () {
         }
     };
 
-    function Brawler() {
+    var Brawler = function () {
         Warrior.apply(this, [my]);
     }
 
@@ -263,7 +273,7 @@ var Brawler = (function () {
             // calculate special
             this.defence += my.special.bonusDefence;
             my.special.applied = true;
-            console.log(this.name + " has increased their defence!");
+            this.broadcastMessage(this.name + " has increased their defence!");
         }
 
         return wasHit;
@@ -280,20 +290,5 @@ var Brawler = (function () {
     }
 
     return Brawler;
-})();
+  });
 
-var n = new Ninja();
-var s = new Samurai();
-var b = new Brawler();
-
-s.getAttackedBy(b);
-s.getAttackedBy(n);
-console.log(s.toString());
-
-b.getAttackedBy(s);
-b.getAttackedBy(n);
-console.log(b.toString());
-
-n.getAttackedBy(s);
-n.getAttackedBy(b);
-console.log(n.toString());

@@ -5,7 +5,8 @@ angular
     'ngCookies',
     'ngResource',
     'ngSanitize',
-    'ngRoute'
+    'ngRoute',
+    'mffighterApp.warriors'
   ])
   .config(function ($routeProvider) {
     $routeProvider
