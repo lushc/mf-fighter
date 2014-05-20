@@ -104,7 +104,7 @@ var Warrior = (function () {
       ", Attack: " + this.attack +
       ", Defence: " + this.defence +
       ", Speed: " + this.speed +
-      ", Evade Chance: " + this.evadeChance;
+      ", Evade Chance: " + this.evadeChance.toFixed(2);
     }
 
     return Warrior;
@@ -150,6 +150,16 @@ var Ninja = (function () {
         }
 
         return Warrior.prototype.doAttack.call(this);
+    }
+
+    /**
+     * @return {String} A character sheet for the ninja
+     * @override
+     */
+    Ninja.prototype.toString = function () {
+        return Warrior.prototype.toString.call(this) +
+        ", Special: " + my.special.attackModifier + "x attack modifier ("
+        + (my.special.chance * 100) + "% chance)";
     }
 
     return Ninja;
@@ -200,6 +210,16 @@ var Samurai = (function () {
         return evaded;
     }
 
+    /**
+     * @return {String} A character sheet for the samurai
+     * @override
+     */
+    Samurai.prototype.toString = function () {
+        return Warrior.prototype.toString.call(this) +
+        ", Special: +" + my.special.regenAmount + " health on evade ("
+        + (my.special.chance * 100) + "% chance)";
+    }
+
     return Samurai;
 })();
 
@@ -247,6 +267,16 @@ var Brawler = (function () {
         }
 
         return wasHit;
+    }
+
+    /**
+     * @return {String} A character sheet for the brawler
+     * @override
+     */
+    Brawler.prototype.toString = function () {
+        return Warrior.prototype.toString.call(this) +
+        ", Special: +" + my.special.bonusDefence + " defence when health is below "
+        + (my.special.threshold * 100) + "% (" + (!my.special.applied ? "not " : "") + "applied)";
     }
 
     return Brawler;
