@@ -70,28 +70,24 @@ var Warrior = (function () {
      * @return {Boolean}          True if the attack was successful, false otherwise
      */
     Warrior.prototype.getAttackedBy = function (attacker) {
-        var self = this.constructor.name,
-            foe = attacker.constructor.name,
-            damage = 0;
-
         // check if the attack will be evaded
         if (this.doEvade()) {
-            console.log(self + " avoided " + foe + "'s attack!");
+            console.log(this.name + " avoided " + attacker.name + "'s attack!");
             return false;
         }
 
         // calculate the damage to be taken
-        damage = (attacker.doAttack() - this.defence);
+        var damage = (attacker.doAttack() - this.defence);
 
         // make sure negative damage won't be applied
         if (damage <= 0) {
-            console.log(foe + "'s attack connected but didn't even scratch " + self + "!");
+            console.log(attacker.name + "'s attack connected but didn't even scratch " + this.name + "!");
             return false;
         }
 
         // apply the damage
         this.health -= damage;
-        console.log(foe + " hit " + self + " for " + damage + " damage");
+        console.log(attacker.name + " hit " + this.name + " for " + damage + " damage");
 
         // successful hit
         return true;
@@ -102,7 +98,7 @@ var Warrior = (function () {
      * @override
      */
     Warrior.prototype.toString = function () {
-      return this.constructor.name + "'s character sheet: " +
+      return this.name + "'s character sheet: " +
       " Current Health: " + this.health +
       ", Max Health: " + this.maxHealth +
       ", Attack: " + this.attack +
@@ -150,7 +146,7 @@ var Ninja = (function () {
         if (Math.random() < my.special.chance) {
             // calculate special
             this.attack *= my.special.attackModifier;
-            console.log(this.constructor.name + " has increased their attack strength!");
+            console.log(this.name + " has increased their attack strength!");
         }
 
         return Warrior.prototype.doAttack.call(this);
@@ -198,7 +194,7 @@ var Samurai = (function () {
             // calculate special
             var regainedHealth = (this.health + my.special.regenAmount);
             this.health = (regainedHealth < this.maxHealth ? regainedHealth : this.maxHealth);
-            console.log(this.constructor.name + " regained health!");
+            console.log(this.name + " regained health!");
         }
 
         return evaded;
@@ -247,7 +243,7 @@ var Brawler = (function () {
             // calculate special
             this.defence += my.special.bonusDefence;
             my.special.applied = true;
-            console.log(this.constructor.name + " has increased their defence!");
+            console.log(this.name + " has increased their defence!");
         }
 
         return wasHit;
