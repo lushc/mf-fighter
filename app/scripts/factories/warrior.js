@@ -20,7 +20,7 @@ angular.module('mffighterApp.warrior', [
              */
             function Warrior(props) {
                 // assign default values
-                var name         = props.name || "Warrior",
+                var name         = props.name         || "Warrior",
                     healthRange  = props.healthRange  || [0, 100],
                     attackRange  = props.attackRange  || [0, 100],
                     defenceRange = props.defenceRange || [0, 100],
@@ -68,13 +68,13 @@ angular.module('mffighterApp.warrior', [
              * Get attacked by another warrior. Checks certain conditions before applying
              * the calculated damage to self
              * @param  {Object} attacker  The Warrior that is attacking this instance
-             * @return {Boolean}          True if the attack was successful, false otherwise
+             * @return {Number}           Returns the damage taken, -1 if the attack was evaded
              */
             Warrior.prototype.getAttackedBy = function(attacker) {
                 // check if the attack will be evaded
                 if (this.doEvade()) {
                     this.broadcastMessage(this.name + " avoided " + attacker.name + "'s attack!");
-                    return false;
+                    return -1;
                 }
 
                 // calculate the damage to be taken
@@ -83,14 +83,14 @@ angular.module('mffighterApp.warrior', [
                 // make sure negative damage won't be applied
                 if (damage <= 0) {
                     this.broadcastMessage(attacker.name + "'s attack connected but didn't even scratch " + this.name + "!");
-                    return false;
+                    return 0;
                 }
 
                 // apply the damage
                 this.health -= damage;
                 this.broadcastMessage(attacker.name + " hit " + this.name + " for " + damage + " damage");
 
-                return true;
+                return damage;
             }
 
             /**
@@ -115,7 +115,15 @@ angular.module('mffighterApp.warrior', [
                     ", Attack: " + this.attack +
                     ", Defence: " + this.defence +
                     ", Speed: " + this.speed +
-                    ", Evade Chance: " + this.evadeChance.toFixed(2);
+                    ", Evade Chance: " + (this.evadeChance.toFixed(2) * 100) + "%" +
+                    ", Special: " + this.specialToString();
+            }
+
+            /**
+             * @return {String} A description of the warrior's special
+             */
+            Warrior.prototype.specialToString = function() {
+                return "None";
             }
 
             return Warrior;
@@ -164,12 +172,10 @@ angular.module('mffighterApp.warrior', [
             }
 
             /**
-             * @return {String} A character sheet for the ninja
              * @override
              */
-            Ninja.prototype.toString = function() {
-                return Warrior.prototype.toString.call(this) +
-                    ", Special: " + my.special.attackModifier + "x attack modifier (" + (my.special.chance * 100) + "% chance)";
+            Ninja.prototype.specialToString = function() {
+                return my.special.attackModifier + "x attack modifier (" + (my.special.chance * 100) + "% chance)";
             }
 
             return Ninja;
@@ -221,12 +227,10 @@ angular.module('mffighterApp.warrior', [
             }
 
             /**
-             * @return {String} A character sheet for the samurai
              * @override
              */
-            Samurai.prototype.toString = function() {
-                return Warrior.prototype.toString.call(this) +
-                    ", Special: +" + my.special.regenAmount + " health on evade (" + (my.special.chance * 100) + "% chance)";
+            Samurai.prototype.specialToString = function() {
+                return "+" + my.special.regenAmount + " health on evade (" + (my.special.chance * 100) + "% chance)";
             }
 
             return Samurai;
@@ -279,12 +283,10 @@ angular.module('mffighterApp.warrior', [
             }
 
             /**
-             * @return {String} A character sheet for the brawler
              * @override
              */
-            Brawler.prototype.toString = function() {
-                return Warrior.prototype.toString.call(this) +
-                    ", Special: +" + my.special.bonusDefence + " defence when health is below " + (my.special.threshold * 100) + "% (" + (!my.special.applied ? "not " : "") + "applied)";
+            Brawler.prototype.specialToString = function() {
+                return "+" + my.special.bonusDefence + " defence when health is below " + (my.special.threshold * 100) + "%" + (my.special.applied ? " (activated)" : "");
             }
 
             return Brawler;
