@@ -1,30 +1,23 @@
 'use strict';
 
 angular.module('mffighterApp.controllers', [
-        'mffighterApp.warrior'
+        'mffighterApp.game'
     ])
-    .controller('MainCtrl', function($scope, $log, WarriorFactory) {
+    .controller('MainCtrl', function($scope, $log, GameService) {
         var messages = [],
-            n = WarriorFactory.createNinja(),
-            s = WarriorFactory.createSamurai(),
-            b = WarriorFactory.createBrawler();
+            game = GameService;
 
         $scope.today = new Date();
         $scope.messages = messages;
+        $scope.game = game;
 
         $scope.$on('gameMessageEvent', function(event, args) {
             messages.push(args.message);
         });
 
-        n.getAttackedBy(s);
-        n.getAttackedBy(b);
-        $log.log(n.toString());
+        $scope.$watch('game.players', function(value) {
+            $log.log(value);
+        }, true);
 
-        s.getAttackedBy(b);
-        s.getAttackedBy(n);
-        $log.log(s.toString());
-
-        b.getAttackedBy(s);
-        b.getAttackedBy(n);
-        $log.log(b.toString());
+        $scope.game.newGame();
     });
