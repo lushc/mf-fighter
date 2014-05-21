@@ -1,10 +1,10 @@
 'use strict';
 
 angular.module('mffighterApp')
-  .controller('MainCtrl', function ($scope, Ninja, Samauri, Brawler) {
+  .controller('MainCtrl', function ($scope, Ninja, Samurai, Brawler) {
     var messages = [],
         n = new Ninja(),
-        s = new Samauri(),
+        s = new Samurai(),
         b = new Brawler();
 
     $scope.today = new Date();

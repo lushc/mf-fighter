@@ -178,9 +178,9 @@ angular.module('mffighterApp.warriors', [])
   })
   /**
    * Samurai class, inherits Warrior with class-specific attributes
-   * @return {Object} An instance of Samauri
+   * @return {Object} An instance of Samurai
    */
-  .factory('Samauri', function (Warrior) {
+  .factory('Samurai', function (Warrior) {
 
     var my = {
         name:         "Samurai",
@@ -203,7 +203,7 @@ angular.module('mffighterApp.warriors', [])
     Samurai.prototype.constructor = Samurai;
 
     /**
-     * The Samauri has a 10% chance of regaining 10 health on a successful evade,
+     * The Samurai has a 10% chance of regaining 10 health on a successful evade,
      * but regain more health points than their maximum health value.
      * Calls the parent method to check whether the attack was evaded before calculating the special
      * @override
