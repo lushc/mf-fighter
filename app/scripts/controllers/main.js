@@ -15,9 +15,5 @@ angular.module('mffighterApp.controllers', [
             messages.push(args.message);
         });
 
-        $scope.$watch('game.players', function(value) {
-            $log.log(value);
-        }, true);
-
         $scope.game.newGame();
     });
