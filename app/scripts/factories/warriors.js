@@ -1,25 +1,14 @@
 'use strict';
 
-angular.module('mffighterApp.warriors', [])
+angular.module('mffighterApp.warriors', [
+        'mffighterApp.math'
+    ])
     /**
      * Base warrior class. Has the following attributes:
      * name, health, attack, defense, speed, evade chance
      * @return {Object} An instance of Warrior
      */
-    .factory('Warrior', function($rootScope) {
-        /**
-         * Helper class for various utilities
-         * @type {Object}
-         */
-        var Utils = {
-            getRandomArbitrary: function(min, max) {
-                return Math.random() * (max - min) + min;
-            },
-            getRandomInt: function(min, max) {
-                return Math.floor(Math.random() * (max - min + 1)) + min;
-            }
-        }
-
+    .factory('Warrior', function($rootScope, NumberService) {
         /**
          * Constructor that assigns the warrior's attributes.
          * The values for each attribute are specified as a range,
@@ -38,11 +27,11 @@ angular.module('mffighterApp.warriors', [])
 
             this.name        = name;
             // calculate attributes randomly based on ranges
-            this.maxHealth   = Utils.getRandomInt(healthRange[0], healthRange[1]);
-            this.attack      = Utils.getRandomInt(attackRange[0], attackRange[1]);
-            this.defence     = Utils.getRandomInt(defenceRange[0], defenceRange[1]);
-            this.speed       = Utils.getRandomInt(speedRange[0], speedRange[1]);
-            this.evadeChance = Utils.getRandomArbitrary(evadeRange[0], evadeRange[1]);
+            this.maxHealth   = NumberService.getRandomInt(healthRange[0], healthRange[1]);
+            this.attack      = NumberService.getRandomInt(attackRange[0], attackRange[1]);
+            this.defence     = NumberService.getRandomInt(defenceRange[0], defenceRange[1]);
+            this.speed       = NumberService.getRandomInt(speedRange[0], speedRange[1]);
+            this.evadeChance = NumberService.getRandomArbitrary(evadeRange[0], evadeRange[1]);
             // keep track of the warrior's current health
             this.health      = this.maxHealth;
         };
