@@ -1,6 +1,8 @@
 'use strict';
 
-angular.module('mffighterApp')
+angular.module('mffighterApp.controllers', [
+        'mffighterApp.warriors'
+    ])
     .controller('MainCtrl', function($scope, Ninja, Samurai, Brawler) {
         var messages = [],
             n = new Ninja(),
