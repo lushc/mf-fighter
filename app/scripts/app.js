@@ -5,6 +5,7 @@ angular.module('mffighterApp', [
         'ngResource',
         'ngSanitize',
         'ngRoute',
+        'ui.bootstrap',
         'mffighterApp.controllers'
     ])
     .config(function($routeProvider) {
