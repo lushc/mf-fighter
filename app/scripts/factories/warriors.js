@@ -55,6 +55,14 @@ angular.module('mffighterApp.warriors', [
         }
 
         /**
+         * Checks if the warrior has had their health points depleted
+         * @return {Boolean} True if the warrior has 0 health, false otherwise
+         */
+        Warrior.prototype.isDead = function() {
+            return (this.health <= 0);
+        }
+
+        /**
          * Get attacked by another warrior. Checks certain conditions before applying
          * the calculated damage to self
          * @param  {Object} attacker  The Warrior that is attacking this instance
