@@ -57,6 +57,13 @@ angular.module('mffighterApp.warrior', [
             }
 
             /**
+             * @return {Number} The warrior's remaining health expressed as a ratio
+             */
+            Warrior.prototype.healthAsRatio = function() {
+                return (this.health / this.maxHealth);
+            }
+
+            /**
              * Checks if the warrior has had their health points depleted
              * @return {Boolean} True if the warrior has 0 health, false otherwise
              */
@@ -78,7 +85,9 @@ angular.module('mffighterApp.warrior', [
                 }
 
                 // calculate the damage to be taken
-                var damage = (attacker.doAttack() - this.defence);
+                var damage = (attacker.doAttack() - this.defence),
+                    newHealth = (this.health - damage),
+                    overkill = (newHealth < 0 ? Math.abs(newHealth) : false);
 
                 // make sure negative damage won't be applied
                 if (damage <= 0) {
@@ -87,19 +96,19 @@ angular.module('mffighterApp.warrior', [
                 }
 
                 // apply the damage
-                this.health -= damage;
-                this.broadcastMessage(attacker.name + " hit " + this.name + " for " + damage + " damage");
+                this.health = (newHealth > 0 ? newHealth : 0);
+                this.broadcastMessage(attacker.name + " hit " + this.name + " for " + damage + " damage" + (overkill ? " (" + overkill + " overkill)" : ""));
 
                 return damage;
             }
 
             /**
-             * Broadcasts a message to the root scope
+             * Broadcasts warrior-related messages
              * @param  {String} message Message detailing the event that happened
              * @return {undefined}
              */
             Warrior.prototype.broadcastMessage = function(message) {
-                $rootScope.$broadcast("gameMessageEvent", {
+                $rootScope.$broadcast("warriorMessageEvent", {
                     message: message
                 });
             }
@@ -272,7 +281,7 @@ angular.module('mffighterApp.warrior', [
             Brawler.prototype.getAttackedBy = function(attacker) {
                 var wasHit = Warrior.prototype.getAttackedBy.call(this, attacker);
 
-                if (!my.special.applied && (this.health / this.maxHealth) < my.special.threshold) {
+                if (!my.special.applied && !this.isDead() && (this.healthAsRatio() < my.special.threshold)) {
                     // calculate special
                     this.defence += my.special.bonusDefence;
                     my.special.applied = true;

@@ -76,6 +76,40 @@ body {
     margin-top: 20px;
 }
 
+/* Player */
+.player-health {
+    font-size: 20px;
+}
+.score {
+    margin-top: 5px;
+    min-height: 20px;
+}
+
+.character-portrait {
+
+    height: 104px;
+    width: 68px;
+    background-image: image-url('sprites.png', false, true);
+
+    &.none {
+        background-position: 0px 0px;
+    }
+    &.samurai {
+        background-position: 68px 0px;
+    }
+    &.brawler {
+        background-position: 136px 0px;
+    }
+    &.ninja {
+        background-position: 204px 0px;
+    }
+}
+
+/* Combat log */
+.combat-log {
+    margin-top: 40px;
+}
+
 /* Responsive: Portrait tablets and up */
 @media screen and (min-width: 768px) {
     .container {
