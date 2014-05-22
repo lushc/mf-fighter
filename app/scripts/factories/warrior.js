@@ -33,7 +33,7 @@ angular.module('mffighterApp.warrior', [
                 this.attack      = NumberService.getRandomInt(attackRange[0], attackRange[1]);
                 this.defence     = NumberService.getRandomInt(defenceRange[0], defenceRange[1]);
                 this.speed       = NumberService.getRandomInt(speedRange[0], speedRange[1]);
-                this.evadeChance = NumberService.getRandomArbitrary(evadeRange[0], evadeRange[1]);
+                this.evadeChance = NumberService.getRandomArbitrary(evadeRange[0], evadeRange[1]).toFixed(2);
                 // keep track of the warrior's current health
                 this.health      = this.maxHealth;
             };
@@ -124,7 +124,7 @@ angular.module('mffighterApp.warrior', [
                     ", Attack: " + this.attack +
                     ", Defence: " + this.defence +
                     ", Speed: " + this.speed +
-                    ", Evade Chance: " + (this.evadeChance.toFixed(2) * 100) + "%" +
+                    ", Evade Chance: " + (this.evadeChance * 100) + "%" +
                     ", Special: " + this.specialToString();
             }
 
