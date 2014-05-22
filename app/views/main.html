@@ -7,9 +7,9 @@
 </div>
 
 <div class="row">
-    <div class="col-lg-6 player" ng-class-even="even" ng-class-odd="odd" ng-repeat="player in game.players">
+    <div class="col-md-6 player" ng-class-even="even" ng-class-odd="odd" ng-repeat="player in game.players">
         <div class="row">
-            <div class="col-lg-8 character-select">
+            <div class="col-md-8 character-select">
                 <h2>{{ player.name }}</h2>
                 <select ng-disabled="game.inProgress" ng-model="player.warrior" ng-options="warrior as warrior.name for warrior in game.warriors[$index]">
                     <option value="">-- choose warrior --</option>
@@ -20,19 +20,19 @@
                     </span>
                 </div>
             </div>
-            <div class="col-lg-4">
+            <div class="col-md-4">
                 <div class="character-portrait {{ player.warrior.name | lowercase}}"></div>
             </div>
         </div>
         <br />
         <div class="row">
-            <div class="col-lg-12" ng-switch on="game.inProgress">
+            <div class="col-md-12" ng-switch on="game.inProgress">
                 <div class="table-responsive table-condensed character-sheet" ng-hide="!player.warrior || game.inProgress" ng-switch-default>
                     <table class="table" ng-model="player.warrior">
                         <thead>
                             <tr>
-                                <th class="col-lg-6">Character Sheet</th>
-                                <th class="col-lg-6"></th>
+                                <th class="col-md-6">Character Sheet</th>
+                                <th class="col-md-6"></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -71,7 +71,7 @@
             </div>
         </div>
     </div>
-    <div class="col-lg-12" ng-switch on="game.inProgress">
+    <div class="col-md-12" ng-switch on="game.inProgress">
         <button type="button" class="btn btn-primary btn-lg btn-block" ng-show="game.playersReady()" ng-click="startGame()" ng-switch-default>Fight!</button>
         <div class="combat-log" ng-switch-when="true">
             <button type="button" class="btn btn-primary btn-lg btn-block" ng-show="game.gameOver" ng-click="newGame()">Rematch!</button>
